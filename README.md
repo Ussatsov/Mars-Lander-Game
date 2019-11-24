@@ -1,4 +1,4 @@
 # Mars-Lander-Game
 
 Install pygame to python 
-pip install pygame
+by typing to cmd pip install pygame
