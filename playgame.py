@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 #  Author: Gordei Ussatsov
 #  Date: 15 April 2019
 #  Version: 3.0
