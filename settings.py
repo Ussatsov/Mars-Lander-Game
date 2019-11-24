@@ -2,7 +2,6 @@
 
 #  Author: Gordei Ussatsov
 #  Date: 08 April 2019
-#  Email: g.ussatsov.18@aberdeen.ac.uk
 #  Version: 3.0
 #  Game Configs
 
