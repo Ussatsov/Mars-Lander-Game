@@ -1,6 +1,5 @@
 #  Author: Gordei Ussatsov
 #  Date: 15 April 2019
-#  Email: g.ussatsov.18@aberdeen.ac.uk
 #  Version: 3.0
 #  Mars Lander main file
 
