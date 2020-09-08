@@ -21,7 +21,7 @@ TITLE = "Mars Lander"
 WIDTH = 1200
 HEIGHT = 750
 FPS = 120
-GRAVITY = .002
+GRAVITY = .008
 HEIGTADJUSTMENT = 4/3
 
 # ----------Player----------
