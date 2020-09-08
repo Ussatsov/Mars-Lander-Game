@@ -3,10 +3,6 @@
 > My first big project that shows my OOP skills as well as coding style I have
 
 **Badges will go here**
-
-- license
-
-
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 
