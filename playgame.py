@@ -134,7 +134,9 @@ class Game():
         [summary]
             Method that write all the text to the game screen
         """
-        self.draw_text(self.screen, f'{self.My_ship.rot}', 20, 400, 34)
+        # uncomment bellow and you will see tilt of the ship
+        # useful for the debugging
+        # self.draw_text(self.screen, f'{self.My_ship.rot}', 20, 400, 34)
 
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.y)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 57)
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.x)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 34)
@@ -228,17 +230,18 @@ class Game():
         """
         self.screen.blit(self.start_bg, (0, 0))
         self.draw_text(self.screen, "Mars Lander", 64, 10, 10)
-        self.draw_text(self.screen, "Arrow keys to rotate, Space to thrust", 22,\
-                       10, 90)
-        self.draw_text(self.screen, "Successful landing gives 50 points", 22,\
-                       10, 120)
-        self.draw_text(self.screen, "Successful landing: ship lands on a pad,", 22,\
-                       10, 150)
-        self.draw_text(self.screen, "ship's x and y velocities are less than five m/s and", 22,\
-                       10, 180)
-        self.draw_text(self.screen, "ship tilt is less than 10 degrees", 22,\
-                       10, 210)        
-        self.draw_text(self.screen, "Press any key to begin", 18, 10, 240)
+        self.draw_text(self.screen, "Use arrow keys to rotate the ship and space to thrust",\
+            22, 10, 90)
+        self.draw_text(self.screen, "Successful landing earns you 50 points",\
+            22, 10, 120)
+        self.draw_text(self.screen, "Successful landing is when ship lands on a pad,",\
+            22, 10, 150)
+        self.draw_text(self.screen, "ship's x and y velocities are less than",\
+            22, 10, 180)
+        self.draw_text(self.screen, "five m/s and ship tilt is less than 10 degrees",\
+            22, 10, 210)   
+        self.draw_text(self.screen, "Press any key to begin",\
+            18, 10, 240)
         pg.display.flip()
         
         waiting = True
