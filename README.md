@@ -4,16 +4,8 @@
 
 **Badges will go here**
 
-- build status
-- issues (waffle.io maybe)
-- devDependencies
-- npm package
-- coverage
-- slack
-- downloads
-- gitter chat
 - license
-- etc.
+
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
@@ -55,7 +47,10 @@ $ python3 playgame.py
 
 ### Clone
 
-- Clone this repo to your local machine using `https://github.com/GordeiU/Mars-Lander-Game.git`
+- Clone this repo to your local machine using
+```shell
+$ git clone `https://github.com/GordeiU/Mars-Lander-Game.git`
+```
 
 ## License
 
