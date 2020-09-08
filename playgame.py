@@ -1,16 +1,16 @@
-#!/usr/bin/env python3
-
 #  Author: Gordei Ussatsov
 #  Date: 15 April 2019
 #  Version: 3.0
 #  Mars Lander main file
 
+from pathlib import Path
+
 import pygame as pg
-from settings import *
-from sprites import *
-from classes import *
+from classes.config import *
+from classes.Sprites import *
+from classes.Classes import *
 from random import randrange
-from os import path, listdir
+from os import listdir
 
 
 class Game():
@@ -27,47 +27,41 @@ class Game():
         self.font_name = pg.font.match_font("arial black")
         self.running = True
         self.start_ticks = pg.time.get_ticks() #starter tick 
-        self.start_bg = pg.image.load(path.join(path.join(path.dirname(__file__), IMGFILE), BACKGROUNDSTART)).convert()
+        self.start_bg = pg.image.load(str(BACKGROUND_DIR / 'start.png')).convert()
         self.start_bg_rect = self.start_bg.get_rect()         
     
     def load_data(self):
-        # Set gamesprites folders, so that program should run on any machine
-        self.game_folder = path.dirname(__file__)
-        self.main_folder = path.join(self.game_folder, IMGFILE)
-        self.obstacle_folder = path.join(self.main_folder, OBSTICLEFOLDER)
-        self.landing_pads_folder = path.join(self.main_folder, LANDINGPADFOLDER)
-        self.meteor_folder = path.join(self.main_folder, METEORFOLDER)
-        self.explosion_folder = path.join(self.main_folder, EXPLMETEOR)
-        self.sound_folder = path.join(self.main_folder, SOUNDFOLDER)
-        self.ship_explosion_folder = path.join(self.main_folder, EXPLSHIP)
         # Load all graphics
-        self.bg = pg.image.load(path.join(self.main_folder, BACKGROUND)).convert()
+        self.bg = pg.image.load(str(BACKGROUND_DIR / 'game.png')).convert()
         self.bg_rect = self.bg.get_rect()
-        self.obstacle_imgs = [pg.image.load(path.join(self.obstacle_folder, img)).convert_alpha() for img in listdir(self.obstacle_folder)]
-        self.meteor_imgs = [pg.image.load(path.join(self.meteor_folder, img)).convert_alpha() for img in listdir(self.meteor_folder)]
-        self.ship_img = [pg.image.load(path.join(self.main_folder, img)).convert_alpha() for img in listdir(self.main_folder)
-                         if img == THRUSTINGSHIP or img == NOTTHRUSTINGSHIP]
+        self.obstacle_imgs = [pg.image.load(str(OBSTACLE_FOLDER / name)).convert_alpha()\
+            for name in listdir(OBSTACLE_FOLDER)]
+        self.meteor_imgs = [pg.image.load(str(METEORS_DIR / name)).convert_alpha()\
+            for name in listdir(METEORS_DIR)]
+        self.ship_img = [pg.image.load(str(SHIP_DIR / name)).convert_alpha()\
+            for name in listdir(SHIP_DIR)]
         self.mini_img = pg.transform.scale(self.ship_img[0], (60, 43))
-        self.landing_pads = [pg.image.load(path.join(self.landing_pads_folder, img)).convert_alpha() for img in listdir(self.landing_pads_folder)]
+        self.landing_pads = [pg.image.load(str(LANDING_PADS_DIR / name)).convert_alpha()\
+            for name in listdir(LANDING_PADS_DIR)]
+        
         # Load explosion animation sprites
         self.explosion_animation = {}
         # Load explosion animation sprites for meteor
-        self.explosion_animation["meteor"] = [pg.transform.scale(pg.image.load(path.join(self.explosion_folder, img)).convert_alpha(), (50, 50))
-                                            for img in listdir(self.explosion_folder)]
-        self.explosion_animation["obsticle"] = [pg.transform.scale(img, (80, 80)) for img in self.explosion_animation["meteor"]]
+        self.explosion_animation["meteor"] = [pg.transform.scale(pg.image.load(str(EXPLOSIONS_DIR / name)).convert_alpha(), (50, 50))
+                                            for name in listdir(EXPLOSIONS_DIR)]
+        self.explosion_animation["obsticle"] = [pg.transform.scale(img, (80, 80))\
+            for img in self.explosion_animation["meteor"]]
         # Load explosion animation sprites for ship
-        self.explosion_animation["ship"] = [pg.image.load(path.join(self.ship_explosion_folder, img)).convert_alpha()
-                                            for img in listdir(self.ship_explosion_folder)]
+        self.explosion_animation["ship"] = [pg.image.load(str(SHIP_EXPLOSION / name)).convert_alpha()
+                                            for name in listdir(SHIP_EXPLOSION)]
         
         # Load all sound effects and set their volume
-        pg.mixer.music.load(path.join(self.sound_folder, BGMUSIC))
+        pg.mixer.music.load(str(SOUND_EFFECTS / BGMUSIC))
         pg.mixer.music.set_volume(.3)  
-        self.allert_sound = pg.mixer.Sound(path.join(self.sound_folder, ALLERTSOUND))
+        self.allert_sound = pg.mixer.Sound(str(SOUND_EFFECTS / ALLERTSOUND))
         self.allert_sound.set_volume(.008)
-        self.expl_sounds = [pg.mixer.Sound(path.join(self.sound_folder, sound))
-                            for sound in listdir(self.sound_folder) if sound in EXPLSOUNDMETEOR]
-        for sound in self.expl_sounds:
-            sound.set_volume(.05)
+        self.explosion_sounds = [pg.mixer.Sound(str(SOUND_EFFECTS / sound)).set_volume(.05)\
+            for sound in listdir(SOUND_EFFECTS) if sound in METEOR_EXPLOSION]
     
     def if_end(self):
         if self.if_death_screen == False and self.My_ship._Player.lives ==  0 and\
@@ -112,6 +106,9 @@ class Game():
     
     def write_all(self):
         """ Function what writes all information on the screen"""
+        self.draw_text(self.screen, f'{self.My_ship.rot}', 20, 400, 34)
+
+
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.y)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 57)
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.x)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 34)
         self.draw_text(self.screen, str("{0:.1f}".format(1000 - self.My_ship.height*HEIGTADJUSTMENT))+"m", 14, 260, 12)
@@ -126,14 +123,14 @@ class Game():
             self.draw_text(self.screen, str(self.My_ship.dmg_sustain)+"%", 14, 90, 57)
         if self.My_ship.dmg_sustain > 100:
             self.draw_text(self.screen, "100%", 14, 90, 57)
-        if self.My_ship.check_failure() == True:
-            self.draw_text(self.screen, "*ALERT*", 14, 200, 82)
-        if self.My_ship.failure_engine == True:
-            self.draw_text(self.screen, "!", 14, 300, 82)
-        if self.My_ship.failure_rot_left == True:
-            self.draw_text(self.screen, "<", 14, 310, 82)
-        if self.My_ship.failure_rot_right == True:
-            self.draw_text(self.screen, ">", 14, 320, 82)    
+        # if self.My_ship.check_failure() == True:
+        #     self.draw_text(self.screen, "*ALERT*", 14, 200, 82)
+        # if self.My_ship.failure_engine == True:
+        #     self.draw_text(self.screen, "!", 14, 300, 82)
+        # if self.My_ship.failure_rot_left == True:
+        #     self.draw_text(self.screen, "<", 14, 310, 82)
+        # if self.My_ship.failure_rot_right == True:
+        #     self.draw_text(self.screen, ">", 14, 320, 82)    
     
     def events(self):
         """ Game loop - events"""
@@ -154,7 +151,7 @@ class Game():
         self.My_ship.colide_with_meteor (self.hits_meteor, METEORDMG, self.spawn_meteor)
         self.My_ship.colide_with_obsticle(self.hits_obsticle, OBSTICLEDMG)
             
-        # If ship explode and ship has crashed then game ends
+        # If ship explode or ship has crashed then game ends
         self.if_end()
 
     
@@ -167,7 +164,7 @@ class Game():
         pg.display.flip()    
     
     def new(self):
-        """Function which initilizes sprite groups and calls above functions to setup new game"""
+        """Function which initializes sprite groups and calls above functions to setup new game"""
         self.load_data()
         self.all_sprites = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
