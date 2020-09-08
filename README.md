@@ -17,8 +17,6 @@
 ## Table of Contents (Optional)
 
 - [Installation](#installation)
-- [Features](#features)
-- [Team](#team)
 - [License](#license)
 
 ---
