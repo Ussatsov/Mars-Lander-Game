@@ -1,7 +1,7 @@
 #  Author: Gordei Ussatsov
-#  Date: 15 April 2019
-#  Version: 3.0
-#  Mars Lander main file
+#  Date: 08 September 2020
+#  Version: 4.0
+#  Main file of the game
 
 from pathlib import Path
 
@@ -15,7 +15,7 @@ from os import listdir
 
 class Game():
     def __init__(self, death_screen):
-        # This atribute should be True or False
+        # This attribute should be True or False
         # If it's True death screen would be demonstrated
         # If it's False instead explosion animation will be played
         self.if_death_screen = death_screen
@@ -49,7 +49,7 @@ class Game():
         # Load explosion animation sprites for meteor
         self.explosion_animation["meteor"] = [pg.transform.scale(pg.image.load(str(EXPLOSIONS_DIR / name)).convert_alpha(), (50, 50))
                                             for name in listdir(EXPLOSIONS_DIR)]
-        self.explosion_animation["obsticle"] = [pg.transform.scale(img, (80, 80))\
+        self.explosion_animation["obstacle"] = [pg.transform.scale(img, (80, 80))\
             for img in self.explosion_animation["meteor"]]
         # Load explosion animation sprites for ship
         self.explosion_animation["ship"] = [pg.image.load(str(SHIP_EXPLOSION / name)).convert_alpha()
@@ -60,21 +60,31 @@ class Game():
         pg.mixer.music.set_volume(.3)  
         self.allert_sound = pg.mixer.Sound(str(SOUND_EFFECTS / ALLERTSOUND))
         self.allert_sound.set_volume(.008)
-        self.explosion_sounds = [pg.mixer.Sound(str(SOUND_EFFECTS / sound)).set_volume(.05)\
+        self.explosion_sounds = [pg.mixer.Sound(str(SOUND_EFFECTS / sound))\
             for sound in listdir(SOUND_EFFECTS) if sound in METEOR_EXPLOSION]
+        
+         # set the volume down
+        for s in self.explosion_sounds:
+            s.set_volume(.05)
     
     def if_end(self):
-        if self.if_death_screen == False and self.My_ship._Player.lives ==  0 and\
+        """
+        [summary]
+            Method that checks if the game is still running
+        """
+        if not self.if_death_screen and self.My_ship._Player.lives ==  0 and\
            not self.My_ship.death_animation.alive():
             self.running = False
             self.playing = False
-        
-        if self.if_death_screen == True and self.My_ship._Player.lives ==  0:
+        if self.if_death_screen and self.My_ship._Player.lives ==  0:
             self.running = False
             self.playing = False        
     
     def spawn_landing_zones(self):
-        """Function which spawns three fixed landing zones at the beginnig of the game"""
+        """
+        [summary]
+            Spawn three landing zones
+        """
         while len(self.landing_zones) < 3:
             landing_zone = LandingPad(self)
             landing_zone.set_position()
@@ -82,22 +92,37 @@ class Game():
             self.landing_zones.add(landing_zone)
     
     def spawn_obstacles(self):
-        """Function which spawns five to eight fixed obsticles on the screen"""
-        amount = randrange(5, 8)
-        while len(self.obstacles) < amount:
+        """
+        [summary]
+            Method that spawns five to eight fixed obsticles on the screen
+        """
+        num = randrange(5, 8)
+        while len(self.obstacles) < num:
             ob = Obstacle(self)
             ob.set_position()
             self.all_sprites.add(ob)
             self.obstacles.add(ob)
     
     def spawn_meteor(self):
-        """Function which spawns one meteor"""
+        """
+        [summary]
+            Method that spawns a single meteor
+        """
         m = Meteor(self)
         self.all_sprites.add(m)
         self.mobs.add(m)
     
     def draw_text(self, surf, text, size, x, y):
-        """ Function that draws a text on the screen"""
+        """
+        [summary]
+            Method that draws text on the passed surface
+        Args:
+            surf (pg.screen): [where text should be drown]
+            text (String): [text to draw]
+            size (Int): [Size of the text]
+            x (Int): [x coordinate of the right top corner of the text]
+            y (Int): [y coordinate of the right top corner of the text]
+        """
         font = pg.font.Font(self.font_name, size)
         text_surface = font.render(text, True, WHITE)
         text_rect = text_surface.get_rect()
@@ -105,9 +130,11 @@ class Game():
         surf.blit(text_surface, text_rect)
     
     def write_all(self):
-        """ Function what writes all information on the screen"""
+        """
+        [summary]
+            Method that write all the text to the game screen
+        """
         self.draw_text(self.screen, f'{self.My_ship.rot}', 20, 400, 34)
-
 
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.y)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 57)
         self.draw_text(self.screen, str("{0:.2f}".format(abs(self.My_ship.vel.x)*HEIGTADJUSTMENT)+"m/s"), 14, 280, 34)
@@ -116,21 +143,22 @@ class Game():
         self.draw_text(self.screen, str(self.My_ship._Player.score), 14, 70, 82)
         
         if self.My_ship.fuel > 0:
-            self.draw_text(self.screen, str(self.My_ship.fuel)+"kg", 14, 70, 34)
+            self.draw_text(self.screen, f"{self.My_ship.fuel}kg", 14, 70, 34)
         if self.My_ship.fuel <= 0:
             self.draw_text(self.screen, "0kg", 14, 70, 34)
         if self.My_ship.dmg_sustain < 100:
-            self.draw_text(self.screen, str(self.My_ship.dmg_sustain)+"%", 14, 90, 57)
+            self.draw_text(self.screen, f"{self.My_ship.dmg_sustain}%", 14, 90, 57)
         if self.My_ship.dmg_sustain > 100:
             self.draw_text(self.screen, "100%", 14, 90, 57)
-        # if self.My_ship.check_failure() == True:
-        #     self.draw_text(self.screen, "*ALERT*", 14, 200, 82)
-        # if self.My_ship.failure_engine == True:
-        #     self.draw_text(self.screen, "!", 14, 300, 82)
-        # if self.My_ship.failure_rot_left == True:
-        #     self.draw_text(self.screen, "<", 14, 310, 82)
-        # if self.My_ship.failure_rot_right == True:
-        #     self.draw_text(self.screen, ">", 14, 320, 82)    
+        
+        if self.My_ship.check_failure() == True:
+            self.draw_text(self.screen, "*ALERT*", 14, 200, 82)
+        if not self.My_ship._Engine._if_functional:
+            self.draw_text(self.screen, "!", 14, 300, 82)
+        if not self.My_ship._RightAileron._if_functional:
+            self.draw_text(self.screen, ">", 14, 310, 82)
+        if not self.My_ship._LeftAileron._if_functional:
+            self.draw_text(self.screen, "<", 14, 320, 82)    
     
     def events(self):
         """ Game loop - events"""
@@ -147,9 +175,9 @@ class Game():
         
         # Checks if meteor hit the ship or ship hit any obstacles
         self.hits_meteor = pg.sprite.spritecollide(self.My_ship, self.mobs, True, pg.sprite.collide_circle)
-        self.hits_obsticle = pg.sprite.spritecollide(self.My_ship, self.obstacles, True, pg.sprite.collide_circle)
+        self.hits_obstacle = pg.sprite.spritecollide(self.My_ship, self.obstacles, True, pg.sprite.collide_circle)
         self.My_ship.colide_with_meteor (self.hits_meteor, METEORDMG, self.spawn_meteor)
-        self.My_ship.colide_with_obsticle(self.hits_obsticle, OBSTICLEDMG)
+        self.My_ship.colide_with_obstacle(self.hits_obstacle, OBSTICLEDMG)
             
         # If ship explode or ship has crashed then game ends
         self.if_end()
@@ -164,7 +192,10 @@ class Game():
         pg.display.flip()    
     
     def new(self):
-        """Function which initializes sprite groups and calls above functions to setup new game"""
+        """
+        [summary]
+            Method that initializes sprite groups and calls above functions to setup new game
+        """
         self.load_data()
         self.all_sprites = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
@@ -191,7 +222,10 @@ class Game():
                 self.draw()
     
     def show_start_screen(self):
-        """ Function that shows start screen of the game"""
+        """
+        [summary]
+            Method that shows start screen of the game
+        """
         self.screen.blit(self.start_bg, (0, 0))
         self.draw_text(self.screen, "Mars Lander", 64, 10, 10)
         self.draw_text(self.screen, "Arrow keys to rotate, Space to thrust", 22,\
@@ -218,8 +252,11 @@ class Game():
                     waiting = False
     
     def show_death_screen(self):  
-        """ Function that shows death screen"""
-        self.draw_text(self.screen, "YOU HAVE CRACHED", 35, 400, 400)
+        """
+        [summary]
+            Method that shows death screen
+        """
+        self.draw_text(self.screen, "YOU HAVE CRASHED", 35, 400, 400)
         self.draw_text(self.screen, "press any key to continue", 25, 420, 440)
         
         pg.display.flip()
@@ -232,9 +269,11 @@ class Game():
                     exit(0)
                 if event.type == pg.KEYUP:
                     waiting = False        
-    
     def show_go_screen(self):
-        """ Function that shows G/O screen"""    
+        """
+        [summary]
+            Method that shows G/O screen
+        """  
         self.screen.blit(self.start_bg, (0, 0))          
         self.draw_text(self.screen, "Game Over", 35, 250, 300)
         self.draw_text(self.screen, "Your score is: %d"%(self.My_ship._Player.score), 35, 200, 340)
@@ -250,7 +289,7 @@ class Game():
 
 if __name__ == "__main__":
     pg.init()
-    # If True passed to the class cunstructor death
+    # If True passed to the class constructor death
     # screen will be shown after ship crushes
     My_Game = Game(False)
     My_Game.show_start_screen()

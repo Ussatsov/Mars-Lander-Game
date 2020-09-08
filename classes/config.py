@@ -1,7 +1,8 @@
 #  Author: Gordei Ussatsov
-#  Date: 08 April 2019
-#  Version: 3.0
-#  Game Configs
+#  Date: 08 September 2020
+#  Version: 4.0
+#  Game config
+
 from pathlib import Path
 
 # ----------SpritesFolders----------
@@ -35,6 +36,7 @@ BGMUSIC = "dark fallout.ogg"
 NOTTHRUSTINGSHIP = "lander.png"
 THRUSTINGSHIP = "thrust.png"
 SHIP_ROT_SPEED = .5
+FUEL_AMOUNT = 1000
 
 # ----------Engine----------
 ENGINE_ACC = .01
