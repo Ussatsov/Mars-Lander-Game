@@ -35,7 +35,7 @@ $ pip3 install -r requirements.txt
 
 > How to run the code Note: you must be in the environment we created
 ```shell
-$ python3 playgame.py
+(env) $ python3 playgame.py
 ```
 
 ### Clone
