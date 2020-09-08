@@ -10,7 +10,7 @@
 - When you run the game file you will be greeted by this screen
 
 **Gameplay**
-![Recordit GIF](https://recordit.co/2EQrFR8j4e)
+![Recordit GIF](https://recordit.co/2EQrFR8j4e.gif)
 
 ---
 
