@@ -14,9 +14,10 @@
 
 ---
 
-## Table of Contents (Optional)
+## Table of Contents
 
 - [Installation](#installation)
+- [Clone](#clone)
 - [License](#license)
 
 ---
@@ -38,7 +39,7 @@ $ pip3 install -r requirements.txt
 (env) $ python3 playgame.py
 ```
 
-### Clone
+## Clone
 
 - Clone this repo to your local machine using
 ```shell
