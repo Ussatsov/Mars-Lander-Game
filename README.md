@@ -3,7 +3,7 @@
 > My first big project that shows my OOP skills as well as coding style I have
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-[![Pygame](http://img.shields.io/:Pygame-blue.svg?style=flat-square)](https://www.pygame.org/news)
+[![Pygame](http://img.shields.io/:package-Pygame-blue.svg?style=flat-square)](https://www.pygame.org/news)
 
 
 [![Starting screen of the game](https://i.imgur.com/TI9zUnl.png)]()
