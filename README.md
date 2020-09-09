@@ -32,7 +32,7 @@
 $ pip3 install virtualenv
 $ python -m venv env
 $ source env/bin/activate
-$ pip3 install -r requirements.txt
+(env) $ pip3 install -r requirements.txt
 ```
 
 > How to run the code Note: you must be in the environment we created
