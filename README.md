@@ -44,7 +44,7 @@ $ source env/bin/activate
 
 - Clone this repo to your local machine using
 ```shell
-$ git clone `https://github.com/GordeiU/Mars-Lander-Game.git`
+$ git clone https://github.com/GordeiU/Mars-Lander-Game.git
 ```
 
 ## License
